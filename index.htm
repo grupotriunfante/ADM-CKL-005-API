@@ -104,7 +104,6 @@
   <h1 style="font-size: 32px; margin: 0;">Checklist de Rotina - Jovem Aprendiz - Faturamento</h1>
 </div>
 <h5>ADM-CKL-005-API Rev:01</h5>
-<!-- Formulário de informações iniciais -->
 <div class="form-container" style="display: flex; gap: 20px; align-items: center; flex-wrap: wrap;">
   <div style="flex: 2;">
     <label for="nome">Nome:</label>
@@ -154,7 +153,6 @@
         const atividades = [
           ["13h30 - 16h00", "Separar notas fiscais do faturamento e grampear boletos","-","-","Acionar Coordenador ADM"],
           ["16h00 - 17h30", "Separar borderos de Cobrança por motorista e guardar nas pastas que correspondem cada motorista","-","-","Acionar Coordenador ADM"],
-         
         ];
 
         for (let i = 0; i < atividades.length; i++) {
@@ -202,8 +200,9 @@
     checkboxes.forEach(c => {
       if (c !== checkbox) c.checked = false;
     });
-    const horaCampo = document.querySelector(`[name=hora_${nomeAtividade}]`);
-    const respostaCampo = document.querySelector(`[name=resposta_${nomeAtividade}]`);
+    // Correção: Uso de template string com aspas para o valor do atributo name
+    const horaCampo = document.querySelector(`input[name="hora_${nomeAtividade}"]`);
+    const respostaCampo = document.querySelector(`input[name="resposta_${nomeAtividade}"]`);
     horaCampo.value = new Date().toLocaleString('pt-BR');
     respostaCampo.value = valorSelecionado;
   }
@@ -220,9 +219,11 @@
     }
 
     let algumaMarcada = false;
+    // O loop deve usar o array 'atividades' para determinar o número de atividades
     for (let i = 1; i <= atividades.length; i++) {
-      const resposta = document.querySelector(`[name=resposta_atividade_${i}]`).value;
-      if (resposta === "Sim" || resposta === "Não") {
+      // Correção: Uso de template string com aspas para o valor do atributo name
+      const respostaCampo = document.querySelector(`input[name="resposta_atividade_${i}"]`);
+      if (respostaCampo && (respostaCampo.value === "Sim" || respostaCampo.value === "Não")) {
         algumaMarcada = true;
         break;
       }
@@ -262,7 +263,6 @@
   });
   
 </script>
-<!-- Botão de ajuda discreto no final da página -->
 <div style="text-align: center; margin-top: 60px; margin-bottom: 20px;">
   <a href="mailto:luis.correia@triunfante.com.br,marcelo.portella@triunfante.com.br,raphael.bortot@triunfante.com.br,daniela.nachbar@triunfante.com.br?subject=Ajuda%20-%20Checklist%20Coord%20Adm"
      style="
@@ -287,19 +287,22 @@
 <script>
   window.onload = function () {
     const dataInput = document.getElementById("data");
-    const hoje = new Date().toISOString().split("T")[0];
-    dataInput.value = hoje;
-    dataInput.min = hoje;
-    dataInput.max = hoje;
-    dataInput.readOnly = true; // impede que o usuário digite manualmente
+    const agora = new Date(); // Obtém a data e hora local do dispositivo
+    
+    const ano = agora.getFullYear();
+    const mes = String(agora.getMonth() + 1).padStart(2, '0'); // Mês é de 0 a 11, por isso +1
+    const dia = String(agora.getDate()).padStart(2, '0');
+
+    const hojeFormatado = `${ano}-${mes}-${dia}`;
+    
+    dataInput.value = hojeFormatado; // Define o valor do campo data para o dia atual
+    dataInput.min = hojeFormatado;   // Restringe a data mínima ao dia atual
+    dataInput.max = hojeFormatado;   // Restringe a data máxima ao dia atual
+    dataInput.readOnly = true;       // Impede a digitação manual
+    dataInput.style.pointerEvents = 'none'; // Impede o clique para abrir o calendário
+    dataInput.style.backgroundColor = '#e9ecef'; // Opcional: estilo visual de desabilitado
   };
 </script>
 
-
-
 </body>
-
-
-
-
 </html>
